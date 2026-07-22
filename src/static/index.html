@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalsFlow ERP - Clinic Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0B0F19;
+            --panel-dark: #161D30;
+            --border-color: #263352;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --accent-glow: #38BDF8;
+            --accent-green: #34D399;
+            --accent-purple: #A78BFA;
+            --accent-pink: #F43F5E;
+            --gradient-accent: linear-gradient(135deg, #38BDF8 0%, #A78BFA 100%);
+            --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Login Screen styling */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1E293B 0%, #0F172A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background-color: rgba(22, 29, 48, 0.7);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 450px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 40px rgba(56, 189, 248, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 10px;
+        }
+
+        .login-quick-links {
+            margin-top: 24px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .quick-tag {
+            display: inline-block;
+            background-color: rgba(38, 51, 82, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-tag:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-glow);
+            background-color: rgba(56, 189, 248, 0.05);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--panel-dark);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: #0F172A;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-primary);
+            background-color: rgba(56, 189, 248, 0.08);
+            border-left: 3px solid var(--accent-glow);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .user-profile-widget {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .profile-role {
+            font-size: 11px;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Main Container */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Top Bar */
+        .topbar {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background-color: rgba(11, 15, 25, 0.7);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .topbar-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .metadata-badge-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .metadata-badge {
+            background-color: var(--panel-dark);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .metadata-badge span {
+            color: var(--accent-glow);
+            font-weight: 600;
+        }
+
+        .pulse-icon {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        /* Content Sections */
+        .content-body {
+            padding: 32px;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .content-body.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Forms & Inputs styling */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-control, select, textarea {
+            background-color: rgba(22, 29, 48, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus, select:focus, textarea:focus {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+        }
+
+        /* Panels / Cards */
+        .card {
+            background-color: var(--panel-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Buttons styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: #0F172A;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: rgba(38, 51, 82, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(38, 51, 82, 0.9);
+        }
+
+        .btn-success {
+            background-color: var(--accent-green);
+            color: #0F172A;
+        }
+
+        .btn-danger {
+            background-color: var(--accent-pink);
+            color: var(--text-primary);
+        }
+
+        /* Table design */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: rgba(22, 29, 48, 0.8);
+            color: var(--text-secondary);
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background-color: rgba(56, 189, 248, 0.02);
+        }
+
+        /* UI tags and pills */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-scheduled { background-color: rgba(56, 189, 248, 0.15); color: var(--accent-glow); }
+        .badge-queue { background-color: rgba(167, 139, 250, 0.15); color: var(--accent-purple); }
+        .badge-consulting { background-color: rgba(251, 191, 36, 0.15); color: #FBBF24; }
+        .badge-completed { background-color: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
+
+        /* Dynamic Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        /* Doctor console & medicine rows */
+        .med-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .med-grid-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr auto;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        /* Custom notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--panel-dark);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-glow);
+            padding: 16px 24px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN MODAL OVERLAY -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="brand-logo" style="margin: 0 auto 15px auto;">V</div>
+                <h2>VitalsFlow Console</h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;">Secure Authentication Gateway</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label>Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; height: 45px;"><i class="fa-solid fa-right-to-bracket"></i> Authenticate Credentials</button>
+            </form>
+            <div class="login-quick-links">
+                <p style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase;">Quick-Connect Test Profiles:</p>
+                <div class="quick-tag" onclick="quickFill('superdoc_user', 'superpass123')">SuperDoc</div>
+                <div class="quick-tag" onclick="quickFill('admin_user', 'adminpass123')">Admin</div>
+                <div class="quick-tag" onclick="quickFill('receptionist_user', 'receppass123')">Receptionist</div>
+                <div class="quick-tag" onclick="quickFill('doctor_user', 'docpass123')">Doctor</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar" style="display: none;">
+        <div class="brand">
+            <div class="brand-logo">V</div>
+            <div class="brand-name">VitalsFlow ERP</div>
+        </div>
+        <ul class="nav-list" id="nav-list">
+            <!-- Dynamic items rendered on login -->
+        </ul>
+        <div class="user-profile-widget">
+            <div class="profile-name" id="profile-name">Full Name</div>
+            <div class="profile-role" id="profile-role">Admin</div>
+            <button class="btn btn-secondary btn-small" onclick="handleLogout()" style="padding: 6px 12px; margin-top: 10px; font-size:12px; gap:6px;"><i class="fa-solid fa-power-off" style="color:var(--accent-pink)"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="main-content" id="main-content" style="display: none;">
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="topbar-title" id="page-title">Dashboard & Queue Management</div>
+            <div class="metadata-badge-group">
+                <div class="metadata-badge">
+                    <span class="pulse-icon"></span> Service Status: <span>Offline-Local</span>
+                </div>
+                <div class="metadata-badge">
+                    Branch: <span id="meta-branch">Main Branch</span>
+                </div>
+                <div class="metadata-badge">
+                    Tenant: <span id="meta-tenant">local-clinic</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="toast">
+            <i class="fa-solid fa-circle-check" style="color: var(--accent-glow);"></i>
+            <span id="toast-message">Operation successful!</span>
+        </div>
+
+        <!-- A. DASHBOARD & QUEUE TAB -->
+        <div id="dashboard" class="content-body">
+            <div class="dashboard-grid">
+                <div>
+                    <!-- Live Patient Queue -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-people-line" style="color: var(--accent-glow)"></i> Live Queue List</h3>
+                            <button class="btn btn-secondary" onclick="loadLiveQueue()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                               <thead>
+                                   <tr>
+                                       <th>Token</th>
+                                       <th>Patient ID</th>
+                                       <th>Time</th>
+                                       <th>Status</th>
+                                       <th>Actions</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="queue-list">
+                                   <!-- Dynamic queue rows -->
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="booking-widget-container">
+                    <!-- Book Appointment Form (Only Receptionist / SuperDoc) -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-calendar-plus" style="color: var(--accent-purple)"></i> Book Token</h3>
+                        </div>
+                        <form id="book-appt-form" onsubmit="bookAppointment(event)">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Patient ID / Number</label>
+                                <input type="text" id="appt-patient-id" class="form-control" placeholder="e.g. paste Patient UUID" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Select Doctor</label>
+                                <select id="appt-doctor-id" class="form-control">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label>Appointment Date</label>
+                                    <input type="date" id="appt-date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Scheduled Time</label>
+                                    <input type="time" id="appt-time" class="form-control" value="10:00" required>
+                                </div>
+                            </div>
+                            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label>Visit Type</label>
+                                    <select id="appt-visit-type" class="form-control" required>
+                                        <option>New</option>
+                                        <option>Follow-up</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Consultation Type</label>
+                                    <select id="appt-consult-type" class="form-control" required>
+                                        <option>OPD</option>
+                                        <option>Online</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Notes</label>
+                                <textarea id="appt-notes" class="form-control" rows="2" placeholder="Symptoms, concerns, or notes..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Book & Generate Token</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B. PATIENT DIRECTORY TAB -->
+        <div id="patients" class="content-body">
+            <div class="card" id="patient-registration-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-user-plus" style="color: var(--accent-green)"></i> Patient Registration</h3>
+                </div>
+                <form id="patient-reg-form" onsubmit="registerPatient(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Patient ID</label>
+                            <input type="text" class="form-control" value="Auto-Generated on Save" disabled style="background-color: rgba(255,255,255,0.05); color: var(--text-secondary);">
+                        </div>
+                        <div class="form-group">
+                            <label>Registration Date</label>
+                            <input type="date" id="p-reg-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="p-name" class="form-control" placeholder="Enter Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="p-dob" class="form-control" onchange="calculateAgeFromDOB()" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="p-age" class="form-control" placeholder="Age" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="p-gender" class="form-control">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="text" id="p-mobile" class="form-control" placeholder="e.g. 9876543210" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Alternate Number</label>
+                            <input type="text" id="p-alt-mobile" class="form-control" placeholder="Alternate Number">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="p-email" class="form-control" placeholder="patient@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Blood Group</label>
+                            <select id="p-blood" class="form-control">
+                                <option value="">Select Blood Group</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Marital Status</label>
+                            <select id="p-marital" class="form-control">
+                                <option value="">Select Status</option>
+                                <option>Single</option>
+                                <option>Married</option>
+                                <option>Divorced</option>
+                                <option>Widowed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Emergency Contact</label>
+                            <input type="text" id="p-emergency" class="form-control" placeholder="Name / Relationship / Phone">
+                        </div>
+                    </div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea id="p-address" class="form-control" rows="3" placeholder="Residential Address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Allergies</label>
+                            <textarea id="p-allergies" class="form-control" rows="3" placeholder="e.g. Penicillin, Peanuts (or None)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Medical Notes</label>
+                            <textarea id="p-notes" class="form-control" rows="3" placeholder="e.g. Hypertension history, diabetic"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-user-check"></i> Register Patient</button>
+                </form>
+            </div>
+
+            <!-- Patient Search list -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-magnifying-glass" style="color: var(--accent-glow)"></i> Search Patient Directory</h3>
+                </div>
+                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                    <input type="text" id="search-query" class="form-control" placeholder="Search by name, mobile, or patient number..." style="flex-grow: 1;">
+                    <button class="btn btn-primary" onclick="searchPatients()"><i class="fa-solid fa-search"></i> Search</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient No</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patient-search-results">
+                            <!-- Populated on query -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- C. DOCTOR CONSOLE TAB -->
+        <div id="doctor" class="content-body">
+            <div class="dashboard-grid">
+                <div>
+                    <!-- Clinical Entry Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-file-medical" style="color: var(--accent-purple)"></i> Consultation prescription sheet</h3>
+                        </div>
+                        <form id="consultation-form" onsubmit="submitConsultation(event)">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Active Appointment ID</label>
+                                <input type="text" id="consult-appt-id" class="form-control" readonly placeholder="Select a consulting patient from queue">
+                            </div>
+                            
+                            <!-- Vitals Grid -->
+                            <div class="form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label>Blood Pressure</label>
+                                    <input type="text" id="consult-bp" class="form-control" placeholder="e.g. 120/80">
+                                </div>
+                                <div class="form-group">
+                                    <label>Weight (kg)</label>
+                                    <input type="number" id="consult-weight" class="form-control" placeholder="Weight" step="0.1" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Height (cm)</label>
+                                    <input type="number" id="consult-height" class="form-control" placeholder="Height" step="0.1" min="0">
+                                </div>
+                            </div>
+                            <div class="form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label>Temperature (°F)</label>
+                                    <input type="number" id="consult-temp" class="form-control" placeholder="Temp" step="0.1" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Pulse Rate (bpm)</label>
+                                    <input type="number" id="consult-pulse" class="form-control" placeholder="Pulse" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Follow-up Date</label>
+                                    <input type="date" id="consult-followup" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Symptoms (Comma-separated)</label>
+                                <input type="text" id="consult-symptoms" class="form-control" placeholder="e.g. Fever, Cough, Headache">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Diagnosis</label>
+                                <textarea id="consult-diagnosis" class="form-control" rows="2" placeholder="Clinical assessment..."></textarea>
+                            </div>
+                            
+                            <!-- Medicines Grid -->
+                            <div style="margin-bottom: 20px;">
+                                <label style="font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 10px;">Prescribed Medicines</label>
+                                <div id="medicine-rows-container">
+                                    <!-- Row template -->
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-small" onclick="addMedicineRow()"><i class="fa-solid fa-plus"></i> Add Medicine</button>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label>Doctor Instruction Notes</label>
+                                <input type="text" id="consult-notes" class="form-control" placeholder="e.g. Rest, Drink warm water">
+                            </div>
+                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-prescription"></i> Save prescription & Complete Consult</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Consulting Queue selection -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-clipboard-list" style="color: var(--accent-glow)"></i> Patient Queue</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th>Token</th>
+                                        <th>Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="doctor-queue-list">
+                                    <!-- Consulting / Queue items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- D. BILLING & INVOICING TAB -->
+        <div id="billing" class="content-body">
+            <div class="dashboard-grid">
+                <div>
+                    <!-- Invoice Generation Sheet -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-calculator" style="color: var(--accent-green)"></i> Invoicing Details</h3>
+                        </div>
+                        <form id="invoice-form" onsubmit="generateInvoice(event)">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Appointment ID</label>
+                                <input type="text" id="invoice-appt-id" class="form-control" readonly placeholder="Click 'invoice' on queue items">
+                            </div>
+                            
+                            <!-- Invoice Items -->
+                            <div style="margin-bottom: 20px;">
+                                <label style="font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 10px;">Billing Line Items</label>
+                                <div class="med-row" style="font-weight: 600; color: var(--text-secondary); font-size: 11px;">
+                                    <div>Item Description</div>
+                                    <div>Qty</div>
+                                    <div>Price (₹)</div>
+                                    <div>Tax (%)</div>
+                                    <div></div>
+                                </div>
+                                <div id="invoice-rows-container">
+                                    <!-- Row template -->
+                                </div>
+                                <button type="button" class="btn btn-secondary btn-small" onclick="addInvoiceRow()"><i class="fa-solid fa-plus"></i> Add Item</button>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Discount Amount (₹)</label>
+                                    <input type="number" id="invoice-discount" class="form-control" value="0" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label>Payment Mode</label>
+                                    <select id="invoice-pmode" class="form-control">
+                                        <option>CASH</option>
+                                        <option>UPI</option>
+                                        <option>CARD</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-file-invoice-dollar"></i> Generate invoice receipt</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- Active generated invoices print list -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fa-solid fa-print" style="color: var(--accent-glow)"></i> Recent Invoices</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table style="font-size: 11px;">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice No</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoices-list">
+                                    <!-- Recent invoices -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- E. SYNC CENTER TAB -->
+        <div id="sync" class="content-body">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-database" style="color: var(--accent-purple)"></i> Dynamic CDC Transaction Logs (Sync Engine)</h3>
+                    <button class="btn btn-primary" onclick="syncBatch()"><i class="fa-solid fa-cloud-arrow-up"></i> Push Sync Batch to Cloud</button>
+                </div>
+                <div style="margin-bottom: 15px; font-size: 13px; color: var(--text-secondary);">
+                    This screen displays the localized Change Data Capture (CDC) logs automatically recorded during offline writes. When the local node connects to cloud service, these transactions are multiplexed.
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Table</th>
+                                <th>Record ID</th>
+                                <th>Operation</th>
+                                <th>Payload</th>
+                                <th>Synced</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sync-log-list">
+                            <!-- Dynamic logs rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- F. ADMIN PANEL TAB -->
+        <div id="admin" class="content-body">
+            <!-- Branch Administration -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-code-branch" style="color: var(--accent-purple)"></i> Branch Administration</h3>
+                </div>
+                <form id="branch-mgmt-form" onsubmit="event.preventDefault(); showToast('Branch successfully updated / added!');">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Branch Name</label>
+                            <input type="text" class="form-control" value="Main Downtown Clinic" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Location Code</label>
+                            <input type="text" class="form-control" value="branch-main" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Daily Tokens</label>
+                            <input type="number" class="form-control" value="100">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Update Branch Settings</button>
+                </form>
+            </div>
+
+            <!-- Doctor / User management -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa-solid fa-user-doctor" style="color: var(--accent-green)"></i> User & Doctor Roster</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>doctor_user</td>
+                                <td>Dr. Vivek Singh</td>
+                                <td><span class="badge badge-completed">DOCTOR</span></td>
+                                <td><button class="btn btn-secondary btn-small" onclick="showToast('Cannot delete system seeds')"><i class="fa-solid fa-trash"></i> Remove</button></td>
+                            </tr>
+                            <tr>
+                                <td>receptionist_user</td>
+                                <td>Clinic Receptionist</td>
+                                <td><span class="badge badge-scheduled">RECEPTIONIST</span></td>
+                                <td><button class="btn btn-secondary btn-small" onclick="showToast('Cannot delete system seeds')"><i class="fa-solid fa-trash"></i> Remove</button></td>
+                            </tr>
+                            <tr>
+                                <td>superdoc_user</td>
+                                <td>Super Doctor Owner</td>
+                                <td><span class="badge badge-queue">SUPERDOC</span></td>
+                                <td><button class="btn btn-secondary btn-small" onclick="showToast('SuperDoc owner is protected')"><i class="fa-solid fa-shield"></i> System</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN UI INTEGRATION SCRIPTS -->
+    <script>
+        const API_BASE = ""; // Relative path to FastAPI localhost loopback API
+
+        let activeToken = "";
+        let userRole = "";
+        let userFullName = "";
+        let registeredDocId = "";
+
+        // Role permissions configurations for navbar items
+        const ROLE_PERMISSIONS = {
+            "ADMIN": [
+                { id: "dashboard", label: "Dashboard & Queue", icon: "fa-chart-line" },
+                { id: "sync", label: "Sync Center", icon: "fa-rotate" },
+                { id: "admin", label: "Administration", icon: "fa-gears" }
+            ],
+            "RECEPTIONIST": [
+                { id: "dashboard", label: "Queue List", icon: "fa-people-line" },
+                { id: "patients", label: "Patient Directory", icon: "fa-hospital-user" }
+            ],
+            "DOCTOR": [
+                { id: "dashboard", label: "Queue List", icon: "fa-people-line" },
+                { id: "doctor", label: "Doctor Console", icon: "fa-user-doctor" }
+            ],
+            "SUPERDOC": [
+                { id: "dashboard", label: "Dashboard & Queue", icon: "fa-chart-line" },
+                { id: "patients", label: "Patient Directory", icon: "fa-hospital-user" },
+                { id: "doctor", label: "Doctor Console", icon: "fa-user-doctor" },
+                { id: "billing", label: "Billing & Invoice", icon: "fa-file-invoice-dollar" },
+                { id: "sync", label: "Sync Center", icon: "fa-rotate" },
+                { id: "admin", label: "Administration", icon: "fa-gears" }
+            ]
+        };
+
+        window.onload = function() {
+            // Check if user already has cached credentials
+            const cachedToken = localStorage.getItem("auth_token");
+            const cachedRole = localStorage.getItem("user_role");
+            const cachedName = localStorage.getItem("user_name");
+
+            if (cachedToken && cachedRole && cachedName) {
+                activeToken = cachedToken;
+                userRole = cachedRole;
+                userFullName = cachedName;
+                initAuthenticatedView();
+            }
+            
+            // Add initial fields in forms
+            addMedicineRow();
+            addInvoiceRow();
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-message").innerText = msg;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // --- AUTHENTICATION FLOWS ---
+        function quickFill(user, pass) {
+            document.getElementById("login-username").value = user;
+            document.getElementById("login-password").value = pass;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({
+                        "username": username,
+                        "password": password
+                    })
+                });
+
+                if (!response.ok) {
+                    showToast("Authentication Failed! Check your username/password.");
+                    return;
+                }
+
+                const data = await response.json();
+                activeToken = data.access_token;
+                userRole = data.role;
+                
+                // Store in local storage
+                localStorage.setItem("auth_token", activeToken);
+                localStorage.setItem("user_role", userRole);
+                
+                // Resolve name formatting
+                const names = {
+                    "admin_user": "Clinic Administrator",
+                    "receptionist_user": "Clinic Receptionist",
+                    "doctor_user": "Dr. Vivek Singh",
+                    "superdoc_user": "Super Doctor Owner"
+                };
+                userFullName = names[username] || username;
+                localStorage.setItem("user_name", userFullName);
+
+                showToast(`Welcome back, ${userFullName}!`);
+                initAuthenticatedView();
+            } catch (err) {
+                showToast("Connection failed to authentication gateway.");
+            }
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            activeToken = "";
+            userRole = "";
+            userFullName = "";
+            
+            document.getElementById("sidebar").style.display = "none";
+            document.getElementById("main-content").style.display = "none";
+            document.getElementById("login-overlay").style.display = "flex";
+            document.getElementById("login-form").reset();
+        }
+
+        function initAuthenticatedView() {
+            // Hide login modal
+            document.getElementById("login-overlay").style.display = "none";
+            
+            // Show content structure
+            document.getElementById("sidebar").style.display = "flex";
+            document.getElementById("main-content").style.display = "flex";
+
+            // Render profile widget details
+            document.getElementById("profile-name").innerText = userFullName;
+            document.getElementById("profile-role").innerText = userRole;
+
+            // Generate Nav List based on active role
+            const navList = document.getElementById("nav-list");
+            navList.innerHTML = "";
+
+            const permissions = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS["RECEPTIONIST"];
+            permissions.forEach((perm, index) => {
+                const li = document.createElement("li");
+                li.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                li.setAttribute("onclick", `switchTab('${perm.id}')`);
+                li.innerHTML = `<i class="fa-solid ${perm.icon}"></i> ${perm.label}`;
+                navList.appendChild(li);
+            });
+
+            // Populate metadata elements
+            document.getElementById("meta-tenant").innerText = "local-clinic";
+            document.getElementById("meta-branch").innerText = "Main Branch";
+
+            // Populate Doctor Select
+            loadDoctorsList();
+
+            // Set dynamic forms based on roles
+            configureUiWidgets();
+
+            // Set default registration date to today
+            const regDateInput = document.getElementById("p-reg-date");
+            if (regDateInput) {
+                regDateInput.value = new Date().toISOString().split('T')[0];
+            }
+            const apptDateInput = document.getElementById("appt-date");
+            if (apptDateInput) {
+                apptDateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            // Active first tab
+            switchTab(permissions[0].id);
+        }
+
+        function configureUiWidgets() {
+            const bookingWidget = document.getElementById("booking-widget-container");
+            const patientRegCard = document.getElementById("patient-registration-card");
+
+            // Hide receptionist booking form if logged in as a normal Doctor
+            if (userRole === "DOCTOR") {
+                if (bookingWidget) bookingWidget.style.display = "none";
+                if (patientRegCard) patientRegCard.style.display = "none";
+            } else {
+                if (bookingWidget) bookingWidget.style.display = "block";
+                if (patientRegCard) patientRegCard.style.display = "block";
+            }
+        }
+
+        async function loadDoctorsList() {
+            const selectEl = document.getElementById("appt-doctor-id");
+            selectEl.innerHTML = "";
+            try {
+                // Fetch list of doctors (we query sync logs or use static doctor seed)
+                // In local app, we query doctor_user which is auto-seeded
+                const option = document.createElement("option");
+                option.value = "doctor-id-seeded";
+                option.text = "Dr. Vivek Singh (Seeded)";
+                selectEl.appendChild(option);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".content-body").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+            
+            document.getElementById(tabId).classList.add("active");
+            
+            // Highlight sidebar item
+            const items = document.querySelectorAll(".nav-item");
+            items.forEach(item => {
+                if (item.innerText.includes(document.getElementById(tabId).dataset.navLabel || tabId.charAt(0).toUpperCase() + tabId.slice(1))) {
+                    item.classList.add("active");
+                }
+            });
+            
+            // Update Top bar title
+            const titles = {
+                'dashboard': 'Dashboard & Queue Management',
+                'patients': 'Patient Directory & Registration',
+                'doctor': 'Doctor Clinical Console',
+                'billing': 'Billing & Invoice Generation',
+                'sync': 'Sync Center (Offline-First replication)',
+                'admin': 'Administration & Branch Config'
+            };
+            document.getElementById("page-title").innerText = titles[tabId];
+
+            // Trigger data reloads
+            if (tabId === 'dashboard') {
+                loadLiveQueue();
+            } else if (tabId === 'sync') {
+                loadSyncLogs();
+            } else if (tabId === 'billing') {
+                loadRecentInvoices();
+            } else if (tabId === 'doctor') {
+                loadDoctorQueue();
+            }
+        }
+
+        // Utility to attach Authorization header
+        function getHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${activeToken}`
+            };
+        }
+
+        // --- PATIENT MANAGEMENT ---
+        function calculateAgeFromDOB() {
+            const dobVal = document.getElementById("p-dob").value;
+            if (!dobVal) return;
+            const birthDate = new Date(dobVal);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            document.getElementById("p-age").value = age >= 0 ? age : 0;
+        }
+
+        async function registerPatient(e) {
+            e.preventDefault();
+            const regDate = document.getElementById("p-reg-date").value;
+            const fullName = document.getElementById("p-name").value;
+            const dob = document.getElementById("p-dob").value;
+            const age = parseInt(document.getElementById("p-age").value);
+            const gender = document.getElementById("p-gender").value;
+            const mobile = document.getElementById("p-mobile").value;
+            const altMobile = document.getElementById("p-alt-mobile").value || null;
+            const email = document.getElementById("p-email").value || null;
+            const blood = document.getElementById("p-blood").value || null;
+            const marital = document.getElementById("p-marital").value || null;
+            const emergency = document.getElementById("p-emergency").value || null;
+            const address = document.getElementById("p-address").value;
+            const allergies = document.getElementById("p-allergies").value || "";
+            const notes = document.getElementById("p-notes").value || "";
+
+            try {
+                const res = await fetch(`${API_BASE}/api/patients/register`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        registration_date: regDate,
+                        full_name: fullName,
+                        date_of_birth: dob,
+                        age: age,
+                        gender: gender,
+                        mobile: mobile,
+                        alternate_number: altMobile,
+                        email: email,
+                        blood_group: blood,
+                        marital_status: marital,
+                        emergency_contact: emergency,
+                        address: address,
+                        allergies: allergies,
+                        medical_notes: notes
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Patient registered! No: ${data.patient_number}`);
+                    document.getElementById("patient-reg-form").reset();
+                    // Reset registration date to today
+                    document.getElementById("p-reg-date").value = new Date().toISOString().split('T')[0];
+                    // Auto fill into booking ID for convenience
+                    document.getElementById("appt-patient-id").value = data.id;
+                    switchTab('dashboard');
+                } else {
+                    showToast(`Error: ${data.detail}`);
+                }
+            } catch (err) {
+                showToast("Connection failed to local backend");
+            }
+        }
+
+        async function searchPatients() {
+            const query = document.getElementById("search-query").value;
+            if (!query) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/patients/search?q=${encodeURIComponent(query)}`, {
+                    headers: getHeaders()
+                });
+                const results = await res.json();
+                const tbody = document.getElementById("patient-search-results");
+                tbody.innerHTML = "";
+
+                results.forEach(p => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${p.patient_number}</td>
+                        <td>${p.full_name}</td>
+                        <td>${p.mobile_normalized}</td>
+                        <td>${p.date_of_birth}</td>
+                        <td>${p.gender}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-small" onclick="bookPatientDirect('${p.id}')">Book Appt</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                showToast("Search failed");
+            }
+        }
+
+        function bookPatientDirect(id) {
+            document.getElementById("appt-patient-id").value = id;
+            switchTab('dashboard');
+        }
+
+        // --- QUEUE MANAGEMENT ---
+        async function bookAppointment(e) {
+            e.preventDefault();
+            const patientId = document.getElementById("appt-patient-id").value;
+            const doctorId = document.getElementById("appt-doctor-id").value || "doctor-id-seeded";
+            const apptDate = document.getElementById("appt-date").value;
+            const time = document.getElementById("appt-time").value + ":00";
+            const visitType = document.getElementById("appt-visit-type").value;
+            const consultType = document.getElementById("appt-consult-type").value;
+            const notes = document.getElementById("appt-notes").value || "";
+
+            try {
+                const res = await fetch(`${API_BASE}/api/queue/book`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        patient_id: patientId,
+                        doctor_id: doctorId,
+                        appointment_date: apptDate,
+                        scheduled_time: time,
+                        visit_type: visitType,
+                        consultation_type: consultType,
+                        notes: notes
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Appointment Booked! Token: ${data.queue_token}`);
+                    document.getElementById("book-appt-form").reset();
+                    // Reset date field to today
+                    document.getElementById("appt-date").value = new Date().toISOString().split('T')[0];
+                    loadLiveQueue();
+                } else {
+                    showToast(`Error: ${data.detail}`);
+                }
+            } catch (err) {
+                showToast("Booking failed");
+            }
+        }
+
+        async function loadLiveQueue() {
+            try {
+                const res = await fetch(`${API_BASE}/api/queue/live`, { headers: getHeaders() });
+                const data = await res.json();
+                const tbody = document.getElementById("queue-list");
+                tbody.innerHTML = "";
+
+                data.forEach(appt => {
+                    const statusClass = `badge badge-${appt.status.toLowerCase().replace('_', '-')}`;
+                    let actionBtn = "";
+                    
+                    if ((appt.status === "SCHEDULED" || appt.status === "BOOKED") && (userRole === "RECEPTIONIST" || userRole === "SUPERDOC" || userRole === "ADMIN")) {
+                        actionBtn = `<button class="btn btn-primary" onclick="checkInPatient('${appt.id}')">Check-In</button>`;
+                    } else if (appt.status === "IN_QUEUE") {
+                        actionBtn = `<span class="badge badge-queue">Waiting in line</span>`;
+                    }
+                    
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>
+                            <b style="color: var(--accent-glow); font-size:16px;">${appt.queue_token}</b>
+                            <div style="font-size: 10px; margin-top: 4px;">
+                                <span class="badge badge-scheduled" style="padding: 2px 6px;">${appt.visit_type}</span>
+                                <span class="badge badge-queue" style="padding: 2px 6px; margin-left: 4px;">${appt.consultation_type}</span>
+                            </div>
+                        </td>
+                        <td style="font-size:11px; color:var(--text-secondary);">${appt.patient_id}</td>
+                        <td>${appt.scheduled_time}</td>
+                        <td><span class="${statusClass}">${appt.status}</span></td>
+                        <td>${actionBtn}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.log("Could not load queue");
+            }
+        }
+
+        async function checkInPatient(id) {
+            try {
+                const res = await fetch(`${API_BASE}/api/queue/${id}/checkin`, { 
+                    method: 'POST',
+                    headers: getHeaders()
+                });
+                if (res.ok) {
+                    showToast("Patient checked-in to live queue");
+                    loadLiveQueue();
+                }
+            } catch (err) {
+                showToast("Check-in failed");
+            }
+        }
+
+        // --- DOCTOR CONSOLE ---
+        async function loadDoctorQueue() {
+            try {
+                const res = await fetch(`${API_BASE}/api/queue/live`, { headers: getHeaders() });
+                const data = await res.json();
+                const tbody = document.getElementById("doctor-queue-list");
+                tbody.innerHTML = "";
+
+                data.forEach(appt => {
+                    let action = "";
+                    if (appt.status === "IN_QUEUE") {
+                        action = `<button class="btn btn-primary" onclick="startDoctorConsult('${appt.id}')">Call Patient</button>`;
+                    } else if (appt.status === "CONSULTING") {
+                        action = `<button class="btn btn-success" onclick="selectConsultingPatient('${appt.id}')">Consult Sheet</button>`;
+                    }
+                    
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><b>${appt.queue_token}</b></td>
+                        <td style="font-size:10px; color:var(--text-secondary);">${appt.patient_id.substring(0,8)}...</td>
+                        <td>${action}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.log("Doctor queue load failed");
+            }
+        }
+
+        async function startDoctorConsult(id) {
+            try {
+                const res = await fetch(`${API_BASE}/api/queue/${id}/start-consult`, { 
+                    method: 'POST',
+                    headers: getHeaders()
+                });
+                if (res.ok) {
+                    showToast("Consultation started");
+                    selectConsultingPatient(id);
+                    loadDoctorQueue();
+                }
+            } catch (err) {
+                showToast("Failed to start consult");
+            }
+        }
+
+        function selectConsultingPatient(id) {
+            document.getElementById("consult-appt-id").value = id;
+            showToast("Consultation sheet activated");
+        }
+
+        function addMedicineRow() {
+            const container = document.getElementById("medicine-rows-container");
+            const div = document.createElement("div");
+            div.className = "med-grid-row";
+            div.innerHTML = `
+                <input type="text" class="form-control med-name" placeholder="Medicine Name" required>
+                <input type="text" class="form-control med-dosage" placeholder="1-0-1" required>
+                <input type="text" class="form-control med-freq" placeholder="Freq" required>
+                <input type="text" class="form-control med-duration" placeholder="Duration" required>
+                <select class="form-control med-food" required>
+                    <option>After Food</option>
+                    <option>Before Food</option>
+                </select>
+                <button type="button" class="btn btn-secondary" onclick="this.parentElement.remove()" style="padding: 10px;"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        async function submitConsultation(e) {
+            e.preventDefault();
+            const apptId = document.getElementById("consult-appt-id").value;
+            if (!apptId) {
+                showToast("Please select a consulting patient first");
+                return;
+            }
+
+            const symptoms = document.getElementById("consult-symptoms").value.split(',').map(s => s.trim());
+            const diagnosis = document.getElementById("consult-diagnosis").value;
+            const notes = document.getElementById("consult-notes").value;
+
+            const bp = document.getElementById("consult-bp").value || null;
+            const weight = parseFloat(document.getElementById("consult-weight").value) || null;
+            const height = parseFloat(document.getElementById("consult-height").value) || null;
+            const temp = parseFloat(document.getElementById("consult-temp").value) || null;
+            const pulse = parseInt(document.getElementById("consult-pulse").value) || null;
+            const followup = document.getElementById("consult-followup").value || null;
+
+            const prescription = [];
+            const rows = document.querySelectorAll("#medicine-rows-container .med-grid-row");
+            rows.forEach(row => {
+                prescription.push({
+                    medicine_name: row.querySelector(".med-name").value,
+                    dosage: row.querySelector(".med-dosage").value,
+                    frequency: row.querySelector(".med-freq").value,
+                    duration: row.querySelector(".med-duration").value,
+                    food_relation: row.querySelector(".med-food").value,
+                    instructions: ""
+                });
+            });
+
+            try {
+                const res = await fetch(`${API_BASE}/api/consultations/complete`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        appointment_id: apptId,
+                        symptoms: symptoms,
+                        diagnosis: diagnosis,
+                        prescription: prescription,
+                        blood_pressure: bp,
+                        weight: weight,
+                        height: height,
+                        temperature: temp,
+                        pulse_rate: pulse,
+                        follow_up_date: followup,
+                        notes: notes
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Consultation prescription completed!");
+                    document.getElementById("consultation-form").reset();
+                    document.getElementById("medicine-rows-container").innerHTML = "";
+                    addMedicineRow();
+                    loadDoctorQueue();
+                    
+                    // Auto fill Billing Appointment
+                    document.getElementById("invoice-appt-id").value = apptId;
+                    
+                    if (userRole === "SUPERDOC") {
+                        switchTab('billing');
+                    } else {
+                        switchTab('dashboard');
+                    }
+                } else {
+                    showToast(`Error: ${data.detail}`);
+                }
+            } catch (err) {
+                showToast("Completion failed");
+            }
+        }
+
+        // --- BILLING PANEL ---
+        function addInvoiceRow() {
+            const container = document.getElementById("invoice-rows-container");
+            const div = document.createElement("div");
+            div.className = "med-row";
+            div.innerHTML = `
+                <input type="text" class="form-control bill-desc" placeholder="Item description" required>
+                <input type="number" class="form-control bill-qty" value="1" min="1" required>
+                <input type="number" class="form-control bill-price" placeholder="Price (₹)" step="0.01" required>
+                <input type="number" class="form-control bill-tax" value="18" placeholder="Tax %" required>
+                <button type="button" class="btn btn-secondary" onclick="this.parentElement.remove()" style="padding: 10px;"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        async function generateInvoice(e) {
+            e.preventDefault();
+            const apptId = document.getElementById("invoice-appt-id").value;
+            if (!apptId) {
+                showToast("Please enter an active Appointment ID");
+                return;
+            }
+
+            const discount = parseFloat(document.getElementById("invoice-discount").value) || 0;
+            const pmode = document.getElementById("invoice-pmode").value;
+
+            const items = [];
+            const rows = document.querySelectorAll("#invoice-rows-container .med-row");
+            rows.forEach(row => {
+                items.push({
+                    description: row.querySelector(".bill-desc").value,
+                    quantity: parseInt(row.querySelector(".bill-qty").value),
+                    unit_price: parseFloat(row.querySelector(".bill-price").value),
+                    tax_rate: parseFloat(row.querySelector(".bill-tax").value),
+                    total: 0
+                });
+            });
+
+            try {
+                const res = await fetch(`${API_BASE}/api/billing/invoice`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        appointment_id: apptId,
+                        items: items,
+                        discount_amount: discount,
+                        payment_mode: pmode,
+                        payment_status: "PENDING"
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Invoice generated: ${data.invoice_number}`);
+                    document.getElementById("invoice-form").reset();
+                    document.getElementById("invoice-rows-container").innerHTML = "";
+                    addInvoiceRow();
+                    
+                    // Mark as paid immediately
+                    await fetch(`${API_BASE}/api/billing/invoice/${data.id}/pay`, {
+                        method: 'POST',
+                        headers: getHeaders(),
+                        body: JSON.stringify({payment_mode: pmode})
+                    });
+                    
+                    loadRecentInvoices();
+                } else {
+                    showToast(`Error: ${data.detail}`);
+                }
+            } catch (err) {
+                showToast("Invoice generation failed");
+            }
+        }
+
+        async function loadRecentInvoices() {
+            try {
+                const cdcRes = await fetch(`${API_BASE}/api/sync/unsynced`, { headers: getHeaders() });
+                const cdcLogs = await cdcRes.json();
+                const tbody = document.getElementById("invoices-list");
+                tbody.innerHTML = "";
+
+                const invoices = cdcLogs.filter(log => log.table_name === 'invoices').map(log => JSON.parse(log.payload));
+                
+                invoices.forEach(inv => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><b>${inv.invoice_number}</b></td>
+                        <td>₹${inv.total_amount.toFixed(2)}</td>
+                        <td>
+                            <div style="display:flex; gap: 4px;">
+                                <button class="btn btn-secondary btn-small" onclick="printReceipt('${inv.id}', 'en')" style="padding: 4px 6px; font-size:10px;">EN</button>
+                                <button class="btn btn-secondary btn-small" onclick="printReceipt('${inv.id}', 'hi')" style="padding: 4px 6px; font-size:10px;">HI</button>
+                                <button class="btn btn-secondary btn-small" onclick="printReceipt('${inv.id}', 'mr')" style="padding: 4px 6px; font-size:10px;">MR</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.log("Failed to load invoices");
+            }
+        }
+
+        function printReceipt(id, lang) {
+            // Construct request with token in URL param for browser new window print simplicity
+            const url = `${API_BASE}/api/billing/invoice/${id}/print?lang=${lang}&token=${activeToken}`;
+            window.open(url, '_blank');
+        }
+
+        // --- SYNC CENTER ---
+        async function loadSyncLogs() {
+            try {
+                const res = await fetch(`${API_BASE}/api/sync/unsynced`, { headers: getHeaders() });
+                const data = await res.json();
+                const tbody = document.getElementById("sync-log-list");
+                tbody.innerHTML = "";
+
+                data.forEach(log => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td style="font-size:11px; color:var(--text-secondary);">${log.timestamp}</td>
+                        <td><span class="badge badge-scheduled">${log.table_name}</span></td>
+                        <td style="font-size:10px; color:var(--text-secondary);">${log.record_id.substring(0,8)}...</td>
+                        <td><b style="color: var(--accent-purple);">${log.operation}</b></td>
+                        <td style="font-size:10px; font-family:monospace; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${log.payload}</td>
+                        <td><span class="badge badge-consulting">${log.synced ? "Synced" : "Local Unsynced"}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                showToast("Failed to load CDC sync logs");
+            }
+        }
+
+        async function syncBatch() {
+            try {
+                const res = await fetch(`${API_BASE}/api/sync/unsynced`, { headers: getHeaders() });
+                const logs = await res.json();
+                if (logs.length === 0) {
+                    showToast("Database is completely in sync with Cloud. No packets to push.");
+                    return;
+                }
+
+                const logIds = logs.map(l => l.id);
+                const ackRes = await fetch(`${API_BASE}/api/sync/ack`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ log_ids: logIds })
+                });
+
+                if (ackRes.ok) {
+                    showToast(`Sync complete! Replicated ${logIds.length} CDC packets to Cloud.`);
+                    loadSyncLogs();
+                }
+            } catch (err) {
+                showToast("Sync push failed");
+            }
+        }
+    </script>
+</body>
+</html>
